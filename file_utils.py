@@ -3,12 +3,13 @@ import os.path as osp
 import datetime
 import glob
 
-def get_dir(directory, isFile=False):
+def get_dir(directory):
     """
     Creates the given directory if it does not exist.
     @param directory: The path to the directory.
     @return: The path to the directory.
     """
+    isFile = os.path.isfile(directory)
     if isFile:
         if not os.path.exists(os.path.dirname(directory)):
             os.makedirs(os.path.dirname(directory))
