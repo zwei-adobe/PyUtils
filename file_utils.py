@@ -3,13 +3,13 @@ import os.path as osp
 import datetime
 import glob
 
-def get_dir(directory):
+def get_dir(directory, isFile=False):
     """
     Creates the given directory if it does not exist.
     @param directory: The path to the directory.
     @return: The path to the directory.
     """
-    isFile = os.path.isfile(directory)
+    # isFile = os.path.isfile(directory)
     if isFile:
         if not os.path.exists(os.path.dirname(directory)):
             os.makedirs(os.path.dirname(directory))
@@ -99,6 +99,13 @@ def get_immediate_subdirectories(a_dir):
             if os.path.isdir(os.path.join(a_dir, name))]
 
 
+# def relative_path2root(full_path, root_path):
+#     start_id = len(root_path) + 1 if len(root_path) > 0 else 0
+#     return full_path[start_id:]
+
 def relative_path2root(full_path, root_path):
+    #zwtodo: this needs more tests
     start_id = len(root_path) + 1 if len(root_path) > 0 else 0
+    if root_path == '/':
+        start_id=1
     return full_path[start_id:]

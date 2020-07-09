@@ -1,5 +1,5 @@
 import json
-
+import os
 def save_single_dict2json(s_dict, json_file):
     with open(json_file, 'w') as of_:
         s_dict = json.dumps(s_dict)
@@ -25,4 +25,12 @@ def save_json_list(data_list, save_file):
 def load_json(json_file):
     with open(json_file) as j_reader:
         data = json.load(j_reader)
+    return data
+
+
+def load_json2dict(json_file):
+    assert os.path.isfile(json_file), "cannot find {}".format(json_file)
+    with open(json_file, 'r') as of_:
+        data = json.load(of_)
+    assert isinstance(data, dict), type(data)
     return data
