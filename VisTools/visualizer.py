@@ -26,7 +26,7 @@ from PIL import Image, ImageOps
 from .fb_PathManager import PathManager
 # from detectron2.structures import BitMasks, Boxes, BoxMode, Keypoints, PolygonMasks, RotatedBoxes
 import warnings
-warnings.filterwarnings("error")
+# warnings.filterwarnings("error")
 from .colormap import random_color
 
 logger = logging.getLogger(__name__)
