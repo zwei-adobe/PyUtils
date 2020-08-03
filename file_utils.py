@@ -109,3 +109,16 @@ def relative_path2root(full_path, root_path):
     if root_path == '/':
         start_id=1
     return full_path[start_id:]
+
+
+def relative_path2root_v2(full_path, root_path='/'):
+    # this is a better implementation, slower, but more robust
+    full_path_parts = full_path.split(os.sep)
+    root_path_parts = root_path.split(os.sep)
+    rel_path_parts = []
+    for idx, s_part in enumerate(full_path_parts):
+        if idx < len(root_path_parts):
+            assert s_part == root_path_parts[idx], 'file path doesnt match: abs: {} vs root: {}'.format(full_path, root_path)
+            continue
+        rel_path_parts.append(s_part)
+    return os.sep.join(rel_path_parts)
