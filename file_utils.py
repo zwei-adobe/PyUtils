@@ -3,6 +3,7 @@ import os.path as osp
 import datetime
 import glob
 
+
 def get_dir(directory, isFile=False):
     """
     Creates the given directory if it does not exist.
@@ -63,6 +64,11 @@ def get_extension(file_path):
     ext = basename.split('.')[-1]
     return ext
 
+
+def add_suffix(file_path, suffix='1'):
+    stem = get_stem(file_path, keep_path=True)
+    ext = get_extension(file_path)
+    return '{}_{}.{}'.format(stem, suffix, ext)
 
 def get_files_in_dir(target_directory, formatter=None, ALL=True):
     #zwtodo: this is actually a bug report, all files in the first directory would not be recorded!

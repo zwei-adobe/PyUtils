@@ -314,9 +314,8 @@ class Visualizer:
         )
         return self.output
 
-    def draw_boxes_xywh_with_labels(self, input_bboxes, labels):
+    def draw_boxes_xywh_with_labels(self, input_bboxes, labels, colors=None):
         boxes = input_bboxes
-        colors = None
         alpha = 0.5
         boxes = Visualizer._convert_boxes(boxes)
         boxes_xyxy = Visualizer.boxes_xywh2xyxy(boxes)
