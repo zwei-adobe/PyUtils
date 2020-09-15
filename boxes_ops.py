@@ -9,6 +9,23 @@
 #
 import numpy as np
 
+#zwtodo: this should not be changing the input values
+def convert_list_xywh2xyxy(xywh):
+    if isinstance(xywh[0], list):
+        xyxy = [convert_list_xywh2xyxy(m) for m in xywh]
+        return xyxy
+    else:
+        xyxy = [xywh[0], xywh[1], xywh[2] + xywh[0], xywh[3]+xywh[1]]
+        return xyxy
+
+def convert_list_xyxy2xywh(xyxy):
+    if isinstance(xyxy[0], list):
+        xywh = [convert_list_xyxy2xywh(m) for m in xyxy]
+        return xywh
+    else:
+        xywh = [xyxy[0], xyxy[1], xyxy[2] - xyxy[0], xyxy[3] - xyxy[1]]
+        return xywh
+
 
 def sort_bboxes_xywh(boxes):
     x1 = boxes[:, 0]
@@ -71,7 +88,7 @@ def non_max_suppression_fast(boxes, overlapThresh):
         # compute the width and height of the bounding box
         w = np.maximum(0, xx2 - xx1 + 1)
         h = np.maximum(0, yy2 - yy1 + 1)
-        # compute the ratio of overlap
+        # compute the ratio of compute_coverage_masking
         overlap = (w * h) / (area[idxs[:last]] + area[idxs[last]] - w * h )
         # delete all indexes from the index list that have
         idxs = np.delete(idxs, np.concatenate(([last],
@@ -124,8 +141,8 @@ def remove_inside_boxes(boxes, boarder=5):
         # compute the width and height of the bounding box
         #     w = np.maximum(0, xx2 - xx1 + 1)
         #     h = np.maximum(0, yy2 - yy1 + 1)
-        # compute the ratio of overlap
-        # overlap = (w * h) / (area[idxs[:last]] + area[idxs[last]] - w * h )
+        # compute the ratio of compute_coverage_masking
+        # compute_coverage_masking = (w * h) / (area[idxs[:last]] + area[idxs[last]] - w * h )
         # delete all indexes from the index list that have
         idxs = np.delete(idxs, np.concatenate(([last],
                                                total_inside[0])))
