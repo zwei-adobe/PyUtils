@@ -10,20 +10,26 @@
 import numpy as np
 
 #zwtodo: this should not be changing the input values
-def convert_list_xywh2xyxy(xywh):
+
+
+def convert_list_xywh2xyxy(xywh, convert2int=False):
     if isinstance(xywh[0], list):
         xyxy = [convert_list_xywh2xyxy(m) for m in xywh]
         return xyxy
     else:
         xyxy = [xywh[0], xywh[1], xywh[2] + xywh[0], xywh[3]+xywh[1]]
+        if convert2int:
+            xyxy = list(map(int, xyxy))
         return xyxy
 
-def convert_list_xyxy2xywh(xyxy):
+def convert_list_xyxy2xywh(xyxy, convert2int=False):
     if isinstance(xyxy[0], list):
         xywh = [convert_list_xyxy2xywh(m) for m in xyxy]
         return xywh
     else:
         xywh = [xyxy[0], xyxy[1], xyxy[2] - xyxy[0], xyxy[3] - xyxy[1]]
+        if convert2int:
+            xywh = list(map(int, xywh))
         return xywh
 
 
