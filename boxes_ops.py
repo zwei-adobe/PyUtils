@@ -9,7 +9,69 @@
 #
 import numpy as np
 
-#zwtodo: this should not be changing the input values
+#zwtodo: these operations should not be changing the input values
+
+def extend_box_by_ratio(box, image_size_xy, extend_factor=0.1, box_type='xywh', convert2int=False):
+
+    assert box_type in {'xyxy', 'xywh'}
+    assert isinstance(image_size_xy, (list, tuple))
+    if isinstance(extend_factor, (list, tuple)):
+        assert len(extend_factor) == 2
+        extend_factor_x, extend_factor_y = extend_factor
+    else:
+        extend_factor_x = extend_factor_y = extend_factor
+
+    if box_type == 'xyxy':
+        box = convert_list_xyxy2xywh(box)
+    x = box[0]
+    y = box[1]
+    w = box[2]
+    h = box[3]
+
+    extend_w = w * extend_factor_x // 2
+    extend_h = h * extend_factor_y // 2
+
+    new_x0 = max(x - extend_w, 0)
+    new_y0 = max(y - extend_h, 0)
+    new_x1 = min(new_x0 + w + extend_w * 2, image_size_xy[0])
+    new_y1 = min(new_y0 + h + extend_h * 2, image_size_xy[1])
+    new_box = [new_x0, new_y0, new_x1, new_y1]
+
+    if box_type == 'xywh':
+        new_box = convert_list_xyxy2xywh(new_box)
+
+    if convert2int:
+        new_box = list(map(int, new_box))
+    return new_box
+
+def extend_box_by_pixel(box, image_size_xy=None, extend_pixel=50, box_type='xywh', convert2int=False):
+    assert box_type in {'xyxy', 'xywh'}
+    assert isinstance(image_size_xy, (list, tuple))
+    if isinstance(extend_pixel, (list, tuple)):
+        assert len(extend_pixel) == 2
+        extend_w, extend_h = extend_pixel
+    else:
+        extend_w = extend_h = extend_pixel
+
+    if box_type == 'xyxy':
+        box = convert_list_xyxy2xywh(box)
+    x = box[0]
+    y = box[1]
+    w = box[2]
+    h = box[3]
+
+    new_x0 = max(x - extend_w, 0)
+    new_y0 = max(y - extend_h, 0)
+    new_x1 = min(new_x0 + w + extend_w * 2, image_size_xy[0]) if image_size_xy is not None else new_x0 + w + extend_w * 2
+    new_y1 = min(new_y0 + h + extend_h * 2, image_size_xy[1]) if image_size_xy is not None else new_y0 + h + extend_h * 2
+    new_box = [new_x0, new_y0, new_x1, new_y1]
+
+    if box_type == 'xywh':
+        new_box = convert_list_xyxy2xywh(new_box)
+
+    if convert2int:
+        new_box = list(map(int, new_box))
+    return new_box
 
 
 def convert_list_xywh2xyxy(xywh, convert2int=False):
