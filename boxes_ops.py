@@ -9,7 +9,29 @@
 #
 import numpy as np
 
+
+def get_box_area(bbox, box_type='xywh'):
+    assert box_type in {'xyxy', 'xywh'}
+    if box_type == 'xyxy':
+        bbox = convert_list_xyxy2xywh(bbox)
+    return bbox[2] * bbox[3]
+
+def isA_Inside_B(box_A, box_B, box_type='xywh'):
+    assert box_type in {'xyxy', 'xywh'}
+    if box_type == 'xywh':
+        box_A = convert_list_xywh2xyxy(box_A)
+        box_B = convert_list_xywh2xyxy(box_B)
+        # box_A = [box_A[0], box_A[1], box_A[0] + box_A[2], box_A[1] + box_A[3]]
+        # box_B = [box_B[0], box_B[1], box_B[0] + box_B[2], box_B[1] + box_B[3]]
+
+    if box_A[0] >= box_B[0] and box_A[1] >= box_B[1] and box_A[2] <= box_B[2] and box_A[3] <= box_B[3]:
+        return True
+    else:
+        return False
+
 #zwtodo: these operations should not be changing the input values
+
+
 
 def extend_box_by_ratio(box, image_size_xy, extend_factor=0.1, box_type='xywh', convert2int=False):
 
@@ -43,6 +65,53 @@ def extend_box_by_ratio(box, image_size_xy, extend_factor=0.1, box_type='xywh', 
     if convert2int:
         new_box = list(map(int, new_box))
     return new_box
+
+
+def extend_box_by_ratio_fix(box, image_size_xy, extend_factor=0.1, box_type='xywh', convert2int=False):
+
+    assert box_type in {'xyxy', 'xywh'}
+    assert isinstance(image_size_xy, (list, tuple))
+    if isinstance(extend_factor, (list, tuple)):
+        assert len(extend_factor) == 2
+        extend_factor_x, extend_factor_y = extend_factor
+    else:
+        extend_factor_x = extend_factor_y = extend_factor
+
+    if box_type == 'xyxy':
+        box = convert_list_xyxy2xywh(box)
+    x = box[0]
+    y = box[1]
+    w = box[2]
+    h = box[3]
+
+    extend_w = w * extend_factor_x // 2
+    extend_h = h * extend_factor_y // 2
+
+    new_x0 = max(x - extend_w, 0)
+    offset_x0 = 0 if x - extend_w >= 0 else extend_w - x
+    new_y0 = max(y - extend_h, 0)
+    offset_y0 = 0 if y - extend_h >= 0 else extend_h - y
+
+    new_x1 = min(new_x0 + w + extend_w * 2 + offset_x0, image_size_xy[0])
+    offset_x1 = 0 if new_x0 + w + extend_w * 2 + offset_x0 < image_size_xy[0] else new_x0 + w + extend_w * 2 + \
+                                                                                    offset_x0 - \
+                                                                             image_size_xy[0] - 1
+    new_y1 = min(new_y0 + h + extend_h * 2 + offset_y0, image_size_xy[1])
+    offset_y1 = 0 if new_y0 + h + extend_h * 2 + offset_y0 < image_size_xy[1] else new_y0 + h + extend_h * 2 + offset_y0 - \
+                                                                                   image_size_xy[1] -1
+    if offset_x1 > 0:
+        new_x0 = max(new_x0 - offset_x1, 0)
+    if offset_y1 > 0:
+        new_y0 = max(new_y0 - offset_y1, 0)
+    new_box = [new_x0, new_y0, new_x1, new_y1]
+
+    if box_type == 'xywh':
+        new_box = convert_list_xyxy2xywh(new_box)
+
+    if convert2int:
+        new_box = list(map(int, new_box))
+    return new_box
+
 
 def extend_box_by_pixel(box, image_size_xy=None, extend_pixel=50, box_type='xywh', convert2int=False):
     assert box_type in {'xyxy', 'xywh'}
@@ -217,3 +286,5 @@ def remove_inside_boxes(boxes, boarder=5):
     # return only the bounding boxes that were picked using the
     # integer data type
     return boxes[pick], pick
+
+
