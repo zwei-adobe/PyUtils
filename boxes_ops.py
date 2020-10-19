@@ -10,6 +10,21 @@
 import numpy as np
 
 
+def scale_box(bbox, scale_factor, is_int=False, box_type='xywh'):
+    # resize a box according to scale of image,
+    assert box_type in {'xyxy', 'xywh'}
+    if box_type == 'xywh':
+        bbox = convert_list_xywh2xyxy(bbox)
+    bbox = [bbox[0]*scale_factor, bbox[1]*scale_factor, bbox[2]*scale_factor, bbox[3]*scale_factor]
+    if is_int:
+        bbox = list(map(int, bbox))
+
+    if box_type == 'xywh':
+        bbox = convert_list_xyxy2xywh(bbox)
+    return bbox
+
+
+
 def get_box_area(bbox, box_type='xywh'):
     assert box_type in {'xyxy', 'xywh'}
     if box_type == 'xyxy':
