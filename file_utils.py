@@ -2,6 +2,16 @@ import os
 import os.path as osp
 import datetime
 import glob
+from pathlib import Path
+
+def get_parent_directory(cur_file_path, parent_level=1, to_str=True):
+    cur_dir = Path(osp.dirname(osp.abspath(osp.expanduser(cur_file_path))))
+    for i in range(parent_level):
+        cur_dir = cur_dir.parent
+    if to_str:
+        return str(cur_dir)
+    else:
+        return cur_dir
 
 
 def get_dir(directory, isFile=False):
