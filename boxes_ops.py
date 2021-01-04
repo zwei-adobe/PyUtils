@@ -23,6 +23,20 @@ def scale_box(bbox, scale_factor, is_int=False, box_type='xywh'):
         bbox = convert_list_xyxy2xywh(bbox)
     return bbox
 
+def get_bbox_union(bbox_a, bbox_b, box_type='xywh'):
+    assert box_type in {'xyxy', 'xywh'}
+    if box_type == 'xywh':
+        bbox_a = convert_list_xywh2xyxy(bbox_a)
+        bbox_b = convert_list_xywh2xyxy(bbox_b)
+    x1 = min(bbox_a[0], bbox_b[0])
+    x2 = max(bbox_a[2], bbox_b[2])
+    y1 = min(bbox_a[1], bbox_b[1])
+    y2 = max(bbox_a[3], bbox_b[3])
+    union_bbox = [x1, y1, x2, y2]
+    if box_type == 'xywh':
+        union_bbox = convert_list_xyxy2xywh(union_bbox)
+
+    return union_bbox
 
 
 def get_box_area(bbox, box_type='xywh'):

@@ -14,12 +14,12 @@ import tqdm
 #zwadd: not done yet, should be able to show multiple images
 # raise NotImplementedError
 
-src_image_dir = '/home/zwei/Dev/Datasets/tmp_results/Test_Objectness_Result_JasonObjectness'
-ref_image_dirs = ['/home/zwei/Dev/Datasets/tmp_results/Test_Objectness_Result_Det5_4S_Obj_Cls',
-                 '/home/zwei/Dev/Datasets/tmp_results/Test_Objectness_Result_Det5_4S_Obj_Cls_DBUG']
+src_image_dir = '/home/zwei/Dev/Datasets/Automasking/images_automasking_selected_SVD_v7_boxmerge_1019_v_FC_reproduce1205'
+ref_image_dirs = ['/home/zwei/Dev/Datasets/Automasking/images_automasking_selected_domo_dec04_800',
+                 '/home/zwei/Dev/Datasets/Automasking/images_automasking_selected_domo_objectness_800']
 
 
-target_dir = get_dir('3stitch')
+target_dir = get_dir('/home/zwei/Dev/Datasets/Automasking/images_automasking_selected_svd_domo_domoobj_comparison')
 
 src_images = get_files_in_dir(src_image_dir)
 ref_images_list = [get_files_in_dir(ref_image_dir) for ref_image_dir in ref_image_dirs]
