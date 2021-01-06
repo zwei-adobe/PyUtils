@@ -8,6 +8,11 @@
 # All Rights Reserved
 #
 import numpy as np
+import warnings
+
+
+def box_type_check(box_type):
+    assert box_type in {'xywh', 'xyxy'}, 'box_type has to be xyxy or xywh'
 
 
 def scale_box(bbox, scale_factor, is_int=False, box_type='xywh'):
@@ -32,11 +37,15 @@ def get_bbox_union(bbox_a, bbox_b, box_type='xywh'):
     x2 = max(bbox_a[2], bbox_b[2])
     y1 = min(bbox_a[1], bbox_b[1])
     y2 = max(bbox_a[3], bbox_b[3])
+    if x1>=x2 or y1>=y2:
+        warnings.warn("two boxes were not overlapping, please verify if this is OK in your case")
     union_bbox = [x1, y1, x2, y2]
     if box_type == 'xywh':
         union_bbox = convert_list_xyxy2xywh(union_bbox)
 
     return union_bbox
+
+
 
 
 def get_box_area(bbox, box_type='xywh'):
@@ -317,3 +326,10 @@ def remove_inside_boxes(boxes, boarder=5):
     return boxes[pick], pick
 
 
+if __name__ == '__main__':
+    # test if convert to xyxy/xywh will preserve the original input
+
+    x = [1, 2, 3, 4]
+    y = convert_list_xywh2xyxy(x)
+
+    print("DB")
