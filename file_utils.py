@@ -13,6 +13,33 @@ def get_parent_directory(cur_file_path, parent_level=1, to_str=True):
     else:
         return cur_dir
 
+def keep_cv_supported_image_formats(file_list, formats=None):
+    """
+    Filter a list of files to supported images formats
+    Args:
+        file_list:
+        formats: list, if none, will use default opencv supported formats:
+        https://docs.opencv.org/master/d4/da8/group__imgcodecs.html
+
+    Returns:
+
+    """
+    if formats is None:
+        formats = ['bmp', 'dib', 'jpg', 'jpeg', 'jpe', 'jp2', 'png', 'webp',  'pbm', 'pgm', 'ppm', 'pxm', 'pnm' ,
+                   'pfm', 'tiff', 'tif', 'pic', 'hdr', 'exr']
+    formats = set(formats)
+    image_list = []
+
+    for s_file_path in file_list:
+        s_file_extension = get_extension(s_file_path)
+        if s_file_extension.lower() in formats:
+            image_list.append(s_file_path)
+        else:
+            continue
+
+    return image_list
+
+
 
 def get_dir(directory, isFile=False):
     """
