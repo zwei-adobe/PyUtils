@@ -45,6 +45,20 @@ def get_bbox_union(bbox_a, bbox_b, box_type='xywh'):
 
     return union_bbox
 
+import copy
+#TODO: debug here if ref_box is updated..
+def get_bbox_list_union(bbox_list, box_type='xywh'):
+    assert len(bbox_list)>=1, "bbox_list is empty"
+    ref_box = copy.deepcopy(bbox_list[0])
+
+    if len(bbox_list)<2:
+        return ref_box
+
+    for s_box in bbox_list[1:]:
+        ref_box = get_bbox_union(ref_box, s_box, box_type=box_type)
+
+    return ref_box
+
 
 
 
@@ -324,6 +338,22 @@ def remove_inside_boxes(boxes, boarder=5):
     # return only the bounding boxes that were picked using the
     # integer data type
     return boxes[pick], pick
+
+
+def IOU(box_a, box_b, box_type='xyxy'):
+
+    if box_type == 'xyxy':
+        box_intersection = [max(box_a[0], box_b[0]), max(box_a[1], box_b[1]), min(box_a[2], box_b[2]), min(box_a[3], box_b[3])]
+        box_union = [min(box_a[0], box_b[0]), min(box_a[1], box_b[1]), max(box_a[2], box_b[2]), max(box_a[3], box_b[3])]
+        if box_intersection[2] - box_intersection[0] <= 0 or box_intersection[3] - box_intersection[1] <= 0:
+            return 0
+        else:
+            iou = (box_intersection[2] - box_intersection[0]) * (box_intersection[3] - box_intersection[1]) * 1. / \
+                  ((box_union[2] - box_union[0]) * (box_union[3] - box_union[1]))
+            return iou
+
+    else:
+        raise NotImplementedError("Need to refine for xywh")
 
 
 if __name__ == '__main__':
