@@ -49,7 +49,8 @@ def get_dir(directory, isFile=False):
     """
     # isFile = os.path.isfile(directory)
     if isFile:
-        if not os.path.exists(os.path.dirname(directory)):
+        # fix potential bug with directory is a file without name
+        if len(os.path.dirname(directory))>0 and  not os.path.exists(os.path.dirname(directory)):
             os.makedirs(os.path.dirname(directory))
         return directory
     else:
